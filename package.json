@@ -1,0 +1,41 @@
+{
+  "name": "tikzcd-editor",
+  "version": "0.1.0",
+  "description": "A GUI for creating tikzcd diagrams.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yishn/tikzcd-editor.git"
+  },
+  "keywords": [
+    "tikzcd",
+    "gui",
+    "diagram",
+    "math",
+    "editor"
+  ],
+  "author": "Yichuan Shen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yishn/tikzcd-editor/issues"
+  },
+  "homepage": "https://github.com/yishn/tikzcd-editor",
+  "dependencies": {
+    "classnames": "^2.2.5",
+    "preact": "^8.2.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-1": "^6.24.1",
+    "http-server": "^0.10.0",
+    "webpack": "^3.3.0"
+  },
+  "scripts": {
+    "start": "http-server",
+    "build": "webpack --progress -p",
+    "watch": "webpack --progress --watch"
+  }
+}
