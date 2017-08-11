@@ -7,17 +7,16 @@ class Square extends Component {
         let height = this.props.height || 1
         let positions = [[0, 0], [width, 0], [width, height], [0, height]]
 
-        let nodes = this.props.children.filter(v => v.nodeName === 'node').map((v, i) => ({
-            ...v,
-            attributes: {
-                ...v.attributes,
-                position: positions[i].map((x, j) => x + this.props.position[j])
-            }
-        }))
+        let childProps = this.props.children
+            .filter(v => v && v.nodeName === 'node')
+            .map(v => v.attributes)
 
         return <Diagram>
-            {nodes}
-            {this.props.children.filter(v => v.nodeName === 'edge')}
+            {positions.map((position, i) =>
+                <node {...childProps[i]} position={position.map((x, j) => x + this.props.position[j])} />
+            )}
+
+            {this.props.children.filter(v => v && v.nodeName === 'edge')}
         </Diagram>
     }
 }

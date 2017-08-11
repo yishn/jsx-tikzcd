@@ -27,28 +27,42 @@ function resolveVNode(vnode) {
     }
 }
 
-export class Diagram {
+export class Component {
     constructor(props) {
         this.props = props
+    }
 
-        let getChildren = vnode => {
-            let result = []
+    render() {}
+}
 
-            for (let v of vnode.children) {
-                if (['node', 'edge'].includes(v.nodeName)) {
-                    result.push(v)
-                } else {
-                    result.push(...getChildren(v))
+export class Diagram extends Component {
+    constructor(props) {
+        super(props)
+
+        let getChildren = vnode => vnode.children.reduce((acc, v) => {
+            if (['node', 'edge'].includes(v.nodeName)) {
+                acc.push(v)
+            } else {
+                acc.push(...getChildren(v))
+            }
+
+            return acc
+        }, [])
+
+        let children = getChildren(this.props)
+
+        this.nodes = children.reduce((acc, v) => {
+            if (v.nodeName !== 'node') return acc
+
+            if (!(v.key in acc)) acc[v.key] = v
+            else acc[v.key] = {
+                ...acc[v.key],
+                attributes: {
+                    ...acc[v.key].attributes,
+                    ...v.attributes
                 }
             }
 
-            return result
-        }
-
-        let children = getChildren(props)
-
-        this.nodes = children.reduce((acc, v) => {
-            if (v.nodeName === 'node') acc[v.key] = v
             return acc
         }, {})
 
@@ -121,4 +135,23 @@ export function render(vnode) {
         ...diagramNode.attributes,
         children: diagramNode.children
     }).render()
+}
+
+export function h(nodeName, attributes, ...children) {
+    let getChildren = children => children.reduce((acc, child) => {
+        if (child instanceof Array) {
+            acc.push(...getChildren(child))
+        } else {
+            acc.push(child)
+        }
+
+        return acc
+    }, [])
+
+    return {
+        nodeName,
+        attributes,
+        key: attributes && attributes.key,
+        children: getChildren(children)
+    }
 }
