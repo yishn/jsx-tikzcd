@@ -1,23 +1,48 @@
 import {h, Component} from 'preact'
-import {Diagram, Node, Edge, render as renderTeX} from '../tikzcd'
+import {Diagram, render as renderTeX} from '../tikzcd'
+
+class Square extends Component {
+    render() {
+        let width = this.props.width || 1
+        let height = this.props.height || 1
+        let positions = [[0, 0], [width, 0], [width, height], [0, height]]
+
+        let nodes = this.props.children.filter(v => v.nodeName === 'node').map((v, i) => ({
+            ...v,
+            attributes: {
+                ...v.attributes,
+                position: positions[i].map((x, j) => x + this.props.position[j])
+            }
+        }))
+
+        return <Diagram>
+            {nodes}
+            {this.props.children.filter(v => v.nodeName === 'edge')}
+        </Diagram>
+    }
+}
 
 export default class App extends Component {
     render() {
         return <pre>{renderTeX(
             <Diagram>
-                <Node key="a" position={[1, 0]} value="X" />
-                <Node key="b" position={[0, 1]} value="Y" />
-                <Node key="base" position={[1, 1]} value="Z" />
-                <Node key="test" position={[0, 0]} value="T" />
-                <Node key="product" position={[-1, -1]} value="X\times_Z Y" />
+                <Square position={[0, 0]}>
+                    <node key="test" value="T" />
+                    <node key="a" value="X" />
+                    <node key="base" value="Z" />
+                    <node key="b" value="Y" />
 
-                <Edge from="a" to="base" />
-                <Edge from="b" to="base" />
-                <Edge from="test" to="a" value="f" />
-                <Edge from="test" to="b" value="g" alt />
-                <Edge from="product" to="test" value="\phi" />
-                <Edge from="product" to="a" value="p_X" />
-                <Edge from="product" to="b" value="p_Y" alt />
+                    <edge from="a" to="base" />
+                    <edge from="b" to="base" />
+                    <edge from="test" to="a" value="f" />
+                    <edge from="test" to="b" value="g" alt />
+                </Square>
+
+                <node key="product" position={[-1, -1]} value="X\times_Z Y" />
+
+                <edge from="product" to="test" value="\phi" />
+                <edge from="product" to="a" value="p_X" />
+                <edge from="product" to="b" value="p_Y" alt />
             </Diagram>
         )}</pre>
     }
