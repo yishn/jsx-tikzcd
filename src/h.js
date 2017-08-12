@@ -11,7 +11,7 @@ export default function h(nodeName, attributes, ...children) {
 
     return {
         nodeName,
-        attributes,
+        attributes: attributes || {},
         key: attributes && attributes.key,
         children: getChildren(children)
     }
