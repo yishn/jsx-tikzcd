@@ -4,6 +4,6 @@ export default {
     entry: './src/index.js',
     format: 'cjs',
     plugins: [babel({plugins: ['external-helpers']})],
-    dest: './dist/react-tikzcd.js',
+    dest: './dist/jsx-tikzcd.js',
     sourceMap: true
 }

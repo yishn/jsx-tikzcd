@@ -1,3 +1,3 @@
-# react-tikzcd
+# jsx-tikzcd
 
-React for tikzcd diagrams. This is a work in progress.
+Render tikzcd diagrams with JSX. This is a work in progress.

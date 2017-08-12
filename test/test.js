@@ -1,5 +1,5 @@
 import test from 'ava'
-import {h, render, Component, Diagram} from '../dist/react-tikzcd'
+import {h, render, Component, Diagram} from '../dist/jsx-tikzcd'
 
 class Square extends Component {
     render() {

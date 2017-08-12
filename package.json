@@ -1,11 +1,11 @@
 {
-  "name": "react-tikzcd",
+  "name": "jsx-tikzcd",
   "version": "0.1.0",
-  "description": "React for tikzcd diagrams",
-  "main": "./dist/react-tikzcd",
+  "description": "Render tikzcd diagrams with JSX.",
+  "main": "./dist/jsx-tikzcd",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yishn/react-tikzcd.git"
+    "url": "git+https://github.com/yishn/jsx-tikzcd.git"
   },
   "keywords": [
     "tikzcd",
@@ -18,9 +18,9 @@
   "author": "Yichuan Shen",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yishn/react-tikzcd/issues"
+    "url": "https://github.com/yishn/jsx-tikzcd/issues"
   },
-  "homepage": "https://github.com/yishn/react-tikzcd",
+  "homepage": "https://github.com/yishn/jsx-tikzcd",
   "babel": {
     "presets": [
       [
