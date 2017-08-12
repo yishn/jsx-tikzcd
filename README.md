@@ -1,3 +1,3 @@
-# tikzcd-editor
+# react-tikzcd
 
-A GUI for creating tikzcd diagrams. This is a work in progress.
+React for tikzcd diagrams. This is a work in progress.

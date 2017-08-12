@@ -17,16 +17,9 @@ module.exports = {
                 loader: 'babel-loader',
                 test: /\.js$/,
                 query: {
-                    presets: [['es2015', {modules: false}], 'stage-1'],
-                    plugins: [['transform-react-jsx', {pragma: 'h'}]]
+                    presets: [['es2015', {modules: false}], 'stage-1']
                 }
             }
         ]
-    },
-
-    resolve: {
-        alias: {
-            'preact$': path.join(__dirname, 'node_modules/preact/dist/preact.min')
-        }
     }
 }
