@@ -5,7 +5,7 @@ module.exports = {
     entry: './src/index.js',
 
     output: {
-        filename: 'bundle.js',
+        filename: 'react-tikzcd.js',
         path: path.join(__dirname, 'dist')
     },
 

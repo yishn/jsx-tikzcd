@@ -2,6 +2,7 @@
   "name": "react-tikzcd",
   "version": "0.1.0",
   "description": "React for tikzcd diagrams",
+  "main": "./dist/react-tikzcd",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yishn/react-tikzcd.git"
