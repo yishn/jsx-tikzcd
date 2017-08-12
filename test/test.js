@@ -1,4 +1,4 @@
-const {h, render, Component, Diagram} = require('../dist/bundle')
+const {h, render, Component, Diagram} = require('../dist/react-tikzcd')
 
 class Square extends Component {
     render() {
@@ -36,9 +36,9 @@ console.log(render(
             h('edge', {from: "test", to: "b", value: "g", alt: true})
         ),
 
-        h('node', {key: "product", position: [-1, -1], value: "X\times_Z Y"}),
+        h('node', {key: "product", position: [-1, -1], value: "X\\times_Z Y"}),
 
-        h('edge', {from: "product", to: "test", value: "\phi"}),
+        h('edge', {from: "product", to: "test", value: "\\phi"}),
         h('edge', {from: "product", to: "a", value: "p_X"}),
         h('edge', {from: "product", to: "b", value: "p_Y", alt: true})
     )
