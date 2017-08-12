@@ -8,10 +8,10 @@ function getDirection([x1, y1], [x2, y2]) {
     return [dx, dy].map((d, i) => directions[i][signs[i] + 1].repeat(Math.abs(d))).join('')
 }
 
-function renderEdge(vnode) {
+function renderEdge(vnode, co = false) {
     if (vnode.attributes.direction == null) return ''
 
-    let p = vnode.attributes.alt ? "'" : ''
+    let p = !co === !!vnode.attributes.alt ? "'" : ''
     let value = vnode.attributes.value != null ? `, "${vnode.attributes.value}"${p}` : ''
     let args = ['', ...(vnode.attributes.args || [])].join(', ')
 
@@ -105,7 +105,10 @@ export default class Diagram extends Component {
 
             this.toArray().map(entries => entries.map(entry =>
                 entry == null ? ''
-                : entry.node.attributes.value + ' ' + entry.edges.map(renderEdge).join(' ')
+                : [
+                    entry.node.attributes.value,
+                    ...entry.edges.map(e => renderEdge(e, this.props.co))
+                ].join(' ')
             ).join(' & ')).join(' \\\\\n'),
 
             '\\end{tikzcd}'
