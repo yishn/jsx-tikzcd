@@ -1,5 +1,3 @@
-import Component from './component'
-
 function getDirection([x1, y1], [x2, y2]) {
     let [dx, dy] = [x2 - x1, y2 - y1]
     let signs = [dx, dy].map(Math.sign)
@@ -18,12 +16,23 @@ function renderEdge(vnode, co = false) {
     return `\\arrow[${vnode.attributes.direction}${value}${args}]`
 }
 
-export default class Diagram extends Component {
+export const Node = () => {}
+export const Edge = () => {}
+
+export class Component {
+    constructor(props) {
+        this.props = props
+    }
+
+    render() {}
+}
+
+export class Diagram extends Component {
     constructor(props) {
         super(props)
 
         let getChildren = vnode => vnode.children.reduce((acc, v) => {
-            if (['node', 'edge'].includes(v.nodeName)) {
+            if ([Node, Edge].includes(v.nodeName)) {
                 acc.push(v)
             } else {
                 acc.push(...getChildren(v))
@@ -35,7 +44,7 @@ export default class Diagram extends Component {
         let children = getChildren(this.props)
 
         this.nodes = children.reduce((acc, v) => {
-            if (v.nodeName !== 'node') return acc
+            if (v.nodeName !== Node) return acc
 
             if (!(v.key in acc)) acc[v.key] = v
             else acc[v.key] = {
@@ -50,7 +59,7 @@ export default class Diagram extends Component {
         }, {})
 
         this.edges = children.reduce((acc, v) => {
-            if (v.nodeName !== 'edge') return acc
+            if (v.nodeName !== Edge) return acc
 
             let [from, to] = !props.co ? ['from', 'to'] : ['to', 'from']
 

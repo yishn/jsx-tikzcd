@@ -1,48 +1,44 @@
 import test from 'ava'
-import {h, render, Component, Diagram} from '../dist/jsx-tikzcd'
+import {h, render, Diagram, Node, Edge} from '../dist/jsx-tikzcd'
 
-class Square extends Component {
-    render() {
-        let width = this.props.width || 1
-        let height = this.props.height || 1
-        let positions = [[0, 0], [width, 0], [width, height], [0, height]]
+const Square = props => {
+    let width = props.width || 1
+    let height = props.height || 1
+    let positions = [[0, 0], [width, 0], [width, height], [0, height]]
 
-        let childProps = this.props.children
-            .filter(v => v && v.nodeName === 'node')
-            .map(v => v.attributes)
+    let childProps = props.children
+        .filter(v => v && v.nodeName === Node)
+        .map(v => v.attributes)
 
-        return h(Diagram, {},
-            positions.map((position, i) =>
-                h('node', Object.assign({}, childProps[i], {
-                    position: position.map((x, j) => x + this.props.position[j])
-                }))
-            ),
+    return <Diagram>
+        {positions.map((position, i) =>
+            <Node {...childProps[i]} position={position.map((x, j) => x + props.position[j])} />
+        )}
 
-            this.props.children.filter(v => v && v.nodeName === 'edge')
-        )
-    }
+        {props.children.filter(v => v && v.nodeName === Edge)}
+    </Diagram>
 }
 
 test('fiber product', t => {
     t.is(render(
         <Diagram>
             <Square position={[0, 0]}>
-                <node key="test" value="T" />
-                <node key="a" value="X" />
-                <node key="base" value="Z" />
-                <node key="b" value="Y" />
+                <Node key="test" value="T" />
+                <Node key="a" value="X" />
+                <Node key="base" value="Z" />
+                <Node key="b" value="Y" />
 
-                <edge from="a" to="base" />
-                <edge from="b" to="base" />
-                <edge from="test" to="a" value="f" />
-                <edge from="test" to="b" value="g" alt />
+                <Edge from="a" to="base" />
+                <Edge from="b" to="base" />
+                <Edge from="test" to="a" value="f" />
+                <Edge from="test" to="b" value="g" alt />
             </Square>
 
-            <node key="product" position={[-1, -1]} value="X\times_Z Y" />
+            <Node key="product" position={[-1, -1]} value="X\times_Z Y" />
 
-            <edge from="product" to="test" value="\phi" />
-            <edge from="product" to="a" value="p_X" />
-            <edge from="product" to="b" value="p_Y" alt />
+            <Edge from="product" to="test" value="\phi" />
+            <Edge from="product" to="a" value="p_X" />
+            <Edge from="product" to="b" value="p_Y" alt />
         </Diagram>
     ), [
         '\\begin{tikzcd}',

@@ -1,6 +1,5 @@
 import h from './h'
 import {render, corender} from './render'
-import Component from './component'
-import Diagram from './diagram'
+import {Component, Diagram, Node, Edge} from './components'
 
-export {h, render, corender, Component, Diagram}
+export {h, render, corender, Component, Diagram, Node, Edge}

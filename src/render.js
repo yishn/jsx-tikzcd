@@ -1,7 +1,7 @@
-import Diagram from './diagram'
+import {Diagram, Node, Edge} from './components'
 
 function resolveVNode(vnode) {
-    if (![Diagram, 'node', 'edge'].includes(vnode.nodeName)) {
+    if (![Diagram, Node, Edge].includes(vnode.nodeName)) {
         let props = {...vnode.attributes, children: vnode.children}
 
         if ('render' in vnode.nodeName.prototype) {

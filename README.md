@@ -12,15 +12,15 @@ Render `tikzcd` diagrams with JSX. This is a work in progress.
 // JSX code
 
 <Diagram>
-    <node key="prod" position={[0, 0]} value="X\times_Z Y" />
-    <node key="a" position={[1, 0]} value="X" />
-    <node key="b" position={[0, 1]} value="Y" />
-    <node key="base" position={[1, 1]} value="Z" />
+    <Node key="prod" position={[0, 0]} value="X\times_Z Y" />
+    <Node key="a" position={[1, 0]} value="X" />
+    <Node key="b" position={[0, 1]} value="Y" />
+    <Node key="base" position={[1, 1]} value="Z" />
 
-    <edge from="a" to="base" />
-    <edge from="b" to="base" />
-    <edge from="prod" to="a" value="p_1" />
-    <edge from="prod" to="b" value="p_2" alt />
+    <Edge from="a" to="base" />
+    <Edge from="b" to="base" />
+    <Edge from="prod" to="a" value="p_1" />
+    <Edge from="prod" to="b" value="p_2" alt />
 </Diagram>
 ~~~
 
