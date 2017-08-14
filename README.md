@@ -12,6 +12,7 @@ Render `tikzcd` diagrams with JSX. This is a work in progress.
     - [Components](#components)
     - [Gluing](#gluing)
     - [Duality](#duality)
+- [Documentation](#documentation)
 
 ## Introduction
 
@@ -221,3 +222,30 @@ let tex = corender(
     </Diagram>
 )
 ~~~
+
+## Documentation
+
+### `<Diagram/>`
+
+#### Attributes
+
+* `co` `<Boolean>` *(optional)* - Determines whether to reverse all edges
+* `options` `<String>` *(optional)* - `tikzcd` environment options
+
+### `<Node/>`
+
+#### Attributes
+
+* `key` `<String>`
+* `position` `<Int[]>` - Has the form `[x, y]`
+* `value` `<String>` *(optional)* - LaTeX label
+
+### `<Edge/>`
+
+#### Attributes
+
+* `from` `<String>` - Key of the start node
+* `to` `<String>` - Key of the end node
+* `value` `<String>` *(optional)* - LaTeX label
+* `alt` `<Boolean>` *(optional)* - Determines whether the label is positioned on the other side of the arrow
+* `args` `<String[]>` *(optional)* - Additional tikzcd arguments of edge, e.g. `"hook"`, `"two heads"`, etc.
