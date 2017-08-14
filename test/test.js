@@ -1,21 +1,34 @@
 import test from 'ava'
-import {h, render, Diagram, Node, Edge} from '../dist/jsx-tikzcd'
+import {h, render, Component, Diagram, Node, Edge} from '../dist/jsx-tikzcd'
 
-const Square = props => {
-    let width = props.width || 1
-    let height = props.height || 1
-    let positions = [[0, 0], [width, 0], [width, height], [0, height]]
+const Square = ({width = 1, height = 1, children, position = [0, 0]}) => {
+    let diffs = [[0, 0], [width, 0], [width, height], [0, height]]
 
-    let childProps = props.children
+    let childProps = children
         .filter(v => v && v.nodeName === Node)
         .map(v => v.attributes)
 
     return <Diagram>
-        {positions.map((position, i) =>
-            <Node {...childProps[i]} position={position.map((x, j) => x + props.position[j])} />
+        {diffs.map((diff, i) =>
+            <Node {...childProps[i]} position={position.map((x, j) => x + diff[j])} />
         )}
 
-        {props.children.filter(v => v && v.nodeName === Edge)}
+        {children.filter(v => v && v.nodeName === Edge)}
+    </Diagram>
+}
+
+const Arrow = ({children, position = [0, 0], direction = [1, 0], ...edgeProps}) => {
+    if (children.length < 2) return
+
+    let [x, y] = position || [0, 0]
+    let [dx, dy] = direction || [1, 0]
+    let [a, b, ] = children
+
+    return <Diagram>
+        <Node {...a.attributes} position={[x, y]} />
+        <Node {...b.attributes} position={[x + dx, y + dy]} />
+
+        <Edge {...edgeProps} from={a.key} to={b.key} />
     </Diagram>
 }
 
@@ -45,6 +58,46 @@ test('fiber product', t => {
         'X\\times_Z Y \\arrow[rd, "\\phi"] \\arrow[rrd, "p_X"] \\arrow[rdd, "p_Y"\'] &  &  \\\\',
         ' & T \\arrow[r, "f"] \\arrow[d, "g"\'] & X \\arrow[d] \\\\',
         ' & Y \\arrow[r] & Z',
+        '\\end{tikzcd}'
+    ].join('\n'))
+})
+
+test('merging nodes', t => {
+    t.is(render(
+        <Diagram>
+            <Arrow value="f">
+                <Node key="x" value="X" />
+                <Node key="y" value="Y" />
+            </Arrow>
+
+            <Arrow position={[1, 0]} value="g">
+                <Node key="y" />
+                <Node key="z" value="Z" />
+            </Arrow>
+        </Diagram>
+    ), [
+        '\\begin{tikzcd}',
+        'X \\arrow[r, "f"] & Y \\arrow[r, "g"] & Z',
+        '\\end{tikzcd}'
+    ].join('\n'))
+})
+
+test('duality', t => {
+    t.is(render(
+        <Diagram co>
+            <Arrow value="f">
+                <Node key="x" value="X" />
+                <Node key="y" value="Y" />
+            </Arrow>
+
+            <Arrow position={[1, 0]} value="g">
+                <Node key="y" />
+                <Node key="z" value="Z" />
+            </Arrow>
+        </Diagram>
+    ), [
+        '\\begin{tikzcd}',
+        'X & Y \\arrow[l, "f"\'] & Z \\arrow[l, "g"\']',
         '\\end{tikzcd}'
     ].join('\n'))
 })
