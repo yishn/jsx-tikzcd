@@ -230,6 +230,8 @@ var Diagram = function (_Component) {
 
         var getChildren = function getChildren(vnode) {
             return vnode.children.reduce(function (acc, v) {
+                if (v == null) return acc;
+
                 if ([Node, Edge].includes(v.nodeName)) {
                     acc.push(v);
                 } else {
@@ -243,7 +245,7 @@ var Diagram = function (_Component) {
         var children = getChildren(_this.props);
 
         _this.nodes = children.reduce(function (acc, v) {
-            if (v.nodeName !== Node) return acc;
+            if (v.nodeName !== Node || !v.key || !v.attributes.position) return acc;
 
             if (!(v.key in acc)) acc[v.key] = v;else acc[v.key] = _extends({}, acc[v.key], {
                 attributes: _extends({}, acc[v.key].attributes, v.attributes)
@@ -253,7 +255,7 @@ var Diagram = function (_Component) {
         }, {});
 
         _this.edges = children.reduce(function (acc, v) {
-            if (v.nodeName !== Edge) return acc;
+            if (v.nodeName !== Edge || !v.attributes.from || !v.attributes.to) return acc;
 
             var _ref5 = !props.co ? ['from', 'to'] : ['to', 'from'],
                 _ref6 = slicedToArray(_ref5, 2),
@@ -279,17 +281,17 @@ var Diagram = function (_Component) {
             var _this2 = this;
 
             return Object.keys(this.nodes).map(function (key) {
-                return _this2.nodes[key];
+                return _this2.nodes[key].attributes.position;
             }).reduce(function (_ref7, _ref8) {
-                var _ref9 = slicedToArray(_ref7, 4),
-                    minX = _ref9[0],
-                    maxX = _ref9[1],
-                    minY = _ref9[2],
-                    maxY = _ref9[3];
+                var _ref10 = slicedToArray(_ref7, 4),
+                    minX = _ref10[0],
+                    maxX = _ref10[1],
+                    minY = _ref10[2],
+                    maxY = _ref10[3];
 
-                var _ref8$attributes$posi = slicedToArray(_ref8.attributes.position, 2),
-                    x = _ref8$attributes$posi[0],
-                    y = _ref8$attributes$posi[1];
+                var _ref9 = slicedToArray(_ref8, 2),
+                    x = _ref9[0],
+                    y = _ref9[1];
 
                 return [Math.min(minX, x), Math.max(maxX, x), Math.min(minY, y), Math.max(maxY, y)];
             }, [Infinity, -Infinity, Infinity, -Infinity]);
@@ -389,6 +391,8 @@ function render(vnode) {
     var co = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
     var diagramNode = resolveVNode(vnode);
+
+    if (diagramNode == null || diagramNode.nodeName !== Diagram) return null;
 
     return new Diagram(_extends({}, diagramNode.attributes, {
         co: co !== !!diagramNode.attributes.co,

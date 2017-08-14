@@ -32,6 +32,8 @@ export class Diagram extends Component {
         super(props)
 
         let getChildren = vnode => vnode.children.reduce((acc, v) => {
+            if (v == null) return acc
+
             if ([Node, Edge].includes(v.nodeName)) {
                 acc.push(v)
             } else {
@@ -44,7 +46,8 @@ export class Diagram extends Component {
         let children = getChildren(this.props)
 
         this.nodes = children.reduce((acc, v) => {
-            if (v.nodeName !== Node) return acc
+            if (v.nodeName !== Node || !v.key || !v.attributes.position)
+                return acc
 
             if (!(v.key in acc)) acc[v.key] = v
             else acc[v.key] = {
@@ -59,7 +62,8 @@ export class Diagram extends Component {
         }, {})
 
         this.edges = children.reduce((acc, v) => {
-            if (v.nodeName !== Edge) return acc
+            if (v.nodeName !== Edge || !v.attributes.from || !v.attributes.to)
+                return acc
 
             let [from, to] = !props.co ? ['from', 'to'] : ['to', 'from']
 
@@ -82,8 +86,8 @@ export class Diagram extends Component {
 
     getBounds() {
         return Object.keys(this.nodes)
-            .map(key => this.nodes[key])
-            .reduce(([minX, maxX, minY, maxY], {attributes: {position: [x, y]}}) => [
+            .map(key => this.nodes[key].attributes.position)
+            .reduce(([minX, maxX, minY, maxY], [x, y]) => [
                 Math.min(minX, x), Math.max(maxX, x),
                 Math.min(minY, y), Math.max(maxY, y)
             ], [Infinity, -Infinity, Infinity, -Infinity])

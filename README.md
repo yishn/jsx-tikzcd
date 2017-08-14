@@ -6,6 +6,12 @@ Render `tikzcd` diagrams with JSX. This is a work in progress.
 
 - [Introduction](#introduction)
 - [Getting Started](#getting-started)
+    - [Installation](#installation)
+    - [Set Up](#set-up)
+    - [Render](#render)
+    - [Components](#components)
+    - [Gluing](#gluing)
+    - [Duality](#duality)
 
 ## Introduction
 

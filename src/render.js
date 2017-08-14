@@ -22,6 +22,9 @@ function resolveVNode(vnode) {
 export function render(vnode, co = false) {
     let diagramNode = resolveVNode(vnode)
 
+    if (diagramNode == null || diagramNode.nodeName !== Diagram)
+        return null
+
     return new Diagram({
         ...diagramNode.attributes,
         co: co !== !!diagramNode.attributes.co,
