@@ -125,7 +125,7 @@ let tex = render(
 )
 ~~~
 
-Since jsx-tikzcd renders everything into a single string, there's no need to track state changes. jsx-tikzcd also supports function as components:
+jsx-tikzcd doesn't support state and tracking state changes, so every component is a pure component and can be written as a function as well:
 
 ~~~js
 const Arrow = function(props) {
@@ -170,7 +170,7 @@ let tex = render(
 // \end{tikzcd}
 ~~~
 
-If there are conflicting attributes, the one that was defined last is used.
+If there are conflicting attributes, the one that was defined last is used, i.e. attributes that come after will overwrite attributes that came before. Keep in mind that edges are not glued; you can define multiple edges between two nodes.
 
 ### Duality
 
