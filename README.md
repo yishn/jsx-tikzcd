@@ -1,4 +1,4 @@
-# jsx-tikzcd
+# jsx-tikzcd [![Build Status](https://travis-ci.org/yishn/jsx-tikzcd.svg?branch=master)](https://travis-ci.org/yishn/jsx-tikzcd)
 
 Render `tikzcd` diagrams with JSX. This is a work in progress.
 
