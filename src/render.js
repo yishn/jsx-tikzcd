@@ -1,26 +1,26 @@
 import {Diagram, Node, Edge} from './components'
 
-function resolveVNode(vnode) {
+function resolveComponents(vnode) {
     if (vnode == null) return null
 
     if (![Diagram, Node, Edge].includes(vnode.nodeName)) {
         let props = {...vnode.attributes, children: vnode.children}
 
         if ('render' in vnode.nodeName.prototype) {
-            return resolveVNode(new vnode.nodeName(props).render())
+            return resolveComponents(new vnode.nodeName(props).render())
         } else {
-            return resolveVNode(vnode.nodeName(props))
+            return resolveComponents(vnode.nodeName(props))
         }
     }
 
     return {
         ...vnode,
-        children: vnode.children.map(x => resolveVNode(x)).filter(x => x != null)
+        children: vnode.children.map(x => resolveComponents(x))
     }
 }
 
 export function render(vnode, co = false) {
-    let diagramNode = resolveVNode(vnode)
+    let diagramNode = resolveComponents(vnode)
 
     if (diagramNode == null || diagramNode.nodeName !== Diagram)
         return null

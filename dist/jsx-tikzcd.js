@@ -365,24 +365,22 @@ var Diagram = function (_Component) {
     return Diagram;
 }(Component);
 
-function resolveVNode(vnode) {
+function resolveComponents(vnode) {
     if (vnode == null) return null;
 
     if (![Diagram, Node, Edge].includes(vnode.nodeName)) {
         var props = _extends({}, vnode.attributes, { children: vnode.children });
 
         if ('render' in vnode.nodeName.prototype) {
-            return resolveVNode(new vnode.nodeName(props).render());
+            return resolveComponents(new vnode.nodeName(props).render());
         } else {
-            return resolveVNode(vnode.nodeName(props));
+            return resolveComponents(vnode.nodeName(props));
         }
     }
 
     return _extends({}, vnode, {
         children: vnode.children.map(function (x) {
-            return resolveVNode(x);
-        }).filter(function (x) {
-            return x != null;
+            return resolveComponents(x);
         })
     });
 }
@@ -390,7 +388,7 @@ function resolveVNode(vnode) {
 function render(vnode) {
     var co = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
-    var diagramNode = resolveVNode(vnode);
+    var diagramNode = resolveComponents(vnode);
 
     if (diagramNode == null || diagramNode.nodeName !== Diagram) return null;
 
