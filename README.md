@@ -225,12 +225,22 @@ let tex = corender(
 
 ## Documentation
 
+### `render` and `corender`
+
+#### Arguments
+
+* `vnode` [`<Diagram/>`](#diagram) - The diagram to render
+
+Returns a string which contains the corresponding LaTeX code to the given diagram.
+
 ### `<Diagram/>`
 
 #### Attributes
 
 * `co` `<Boolean>` *(optional)* - Determines whether to reverse all edges
 * `options` `<String>` *(optional)* - `tikzcd` environment options
+
+These attributes only work in the root node, i.e. the node that's passed to `render` or `corender`.
 
 ### `<Node/>`
 
