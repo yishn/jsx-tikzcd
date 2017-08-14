@@ -81,7 +81,8 @@ export class Diagram extends Component {
     }
 
     getBounds() {
-        return Object.values(this.nodes)
+        return Object.keys(this.nodes)
+            .map(key => this.nodes[key])
             .reduce(([minX, maxX, minY, maxY], {attributes: {position: [x, y]}}) => [
                 Math.min(minX, x), Math.max(maxX, x),
                 Math.min(minY, y), Math.max(maxY, y)
@@ -94,12 +95,12 @@ export class Diagram extends Component {
 
         let diagram = Array(maxY - minY + 1).fill().map(_ => Array(maxX - minX + 1).fill(null))
 
-        for (let node of Object.values(this.nodes)) {
-            let [x, y] = node.attributes.position
+        for (let key of Object.keys(this.nodes)) {
+            let [x, y] = this.nodes[key].attributes.position
 
             diagram[y - minY][x - minX] = {
-                node,
-                edges: this.edges[node.key] || []
+                node: this.nodes[key],
+                edges: this.edges[key] || []
             }
         }
 

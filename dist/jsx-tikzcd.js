@@ -276,7 +276,11 @@ var Diagram = function (_Component) {
     createClass(Diagram, [{
         key: 'getBounds',
         value: function getBounds() {
-            return Object.values(this.nodes).reduce(function (_ref7, _ref8) {
+            var _this2 = this;
+
+            return Object.keys(this.nodes).map(function (key) {
+                return _this2.nodes[key];
+            }).reduce(function (_ref7, _ref8) {
                 var _ref9 = slicedToArray(_ref7, 4),
                     minX = _ref9[0],
                     maxX = _ref9[1],
@@ -311,16 +315,16 @@ var Diagram = function (_Component) {
             var _iteratorError = undefined;
 
             try {
-                for (var _iterator = Object.values(this.nodes)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var node = _step.value;
+                for (var _iterator = Object.keys(this.nodes)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var key = _step.value;
 
-                    var _node$attributes$posi = slicedToArray(node.attributes.position, 2),
-                        x = _node$attributes$posi[0],
-                        y = _node$attributes$posi[1];
+                    var _nodes$key$attributes = slicedToArray(this.nodes[key].attributes.position, 2),
+                        x = _nodes$key$attributes[0],
+                        y = _nodes$key$attributes[1];
 
                     diagram[y - minY][x - minX] = {
-                        node: node,
-                        edges: this.edges[node.key] || []
+                        node: this.nodes[key],
+                        edges: this.edges[key] || []
                     };
                 }
             } catch (err) {
@@ -343,14 +347,14 @@ var Diagram = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            var _this2 = this;
+            var _this3 = this;
 
             var options = this.props.options == null ? '' : '[' + this.props.options + ']';
 
             return ['\\begin{tikzcd}' + options, this.toArray().map(function (entries) {
                 return entries.map(function (entry) {
                     return entry == null ? '' : [entry.node.attributes.value].concat(toConsumableArray(entry.edges.map(function (e) {
-                        return renderEdge(e, _this2.props.co);
+                        return renderEdge(e, _this3.props.co);
                     }))).join(' ');
                 }).join(' & ');
             }).join(' \\\\\n'), '\\end{tikzcd}'].join('\n');
