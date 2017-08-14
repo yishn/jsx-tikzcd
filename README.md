@@ -165,6 +165,8 @@ let tex = render(
 // \end{tikzcd}
 ~~~
 
+If there are conflicting attributes, the one that was defined last is used.
+
 ### Duality
 
 In category theory, there's this concept of an opposite category, in which every arrow of a diagram is reversed. It's possible to automate this process in jsx-tikzcd by adding the attribute `co` to a Diagram:
