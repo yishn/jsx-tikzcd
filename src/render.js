@@ -1,6 +1,8 @@
 import {Diagram, Node, Edge} from './components'
 
 function resolveVNode(vnode) {
+    if (vnode == null) return null
+
     if (![Diagram, Node, Edge].includes(vnode.nodeName)) {
         let props = {...vnode.attributes, children: vnode.children}
 
@@ -13,7 +15,7 @@ function resolveVNode(vnode) {
 
     return {
         ...vnode,
-        children: vnode.children.map(x => resolveVNode(x))
+        children: vnode.children.map(x => resolveVNode(x)).filter(x => x != null)
     }
 }
 
