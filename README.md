@@ -247,7 +247,7 @@ These attributes only work in the root node, i.e. the node that's passed to `ren
 #### Attributes
 
 * `key` `<String>`
-* `position` `<Int[]>` - Has the form `[x, y]`
+* `position` `<Int[]>` - Has the form `[x, y]`, negative integers are also allowed
 * `value` `<String>` *(optional)* - LaTeX label
 
 ### `<Edge/>`
