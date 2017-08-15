@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Render tikzcd diagrams with JSX.",
   "main": "./dist/jsx-tikzcd",
+  "module": "./src/index",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yishn/jsx-tikzcd.git"
