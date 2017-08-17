@@ -411,6 +411,7 @@ function corender(vnode) {
 exports.h = h;
 exports.render = render;
 exports.corender = corender;
+exports.renderToDiagram = renderToDiagram;
 exports.Component = Component;
 exports.Diagram = Diagram;
 exports.Node = Node;
