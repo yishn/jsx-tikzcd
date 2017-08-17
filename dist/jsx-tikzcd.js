@@ -385,7 +385,7 @@ function resolveComponents(vnode) {
     });
 }
 
-function render(vnode) {
+function renderToDiagram(vnode) {
     var co = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
     var diagramNode = resolveComponents(vnode);
@@ -395,7 +395,13 @@ function render(vnode) {
     return new Diagram(_extends({}, diagramNode.attributes, {
         co: co !== !!diagramNode.attributes.co,
         children: diagramNode.children
-    })).render();
+    }));
+}
+
+function render(vnode) {
+    var co = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+    return renderToDiagram(vnode, co).render();
 }
 
 function corender(vnode) {
