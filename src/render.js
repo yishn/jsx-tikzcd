@@ -19,7 +19,7 @@ function resolveComponents(vnode) {
     }
 }
 
-export function render(vnode, co = false) {
+export function renderToDiagram(vnode, co = false) {
     let diagramNode = resolveComponents(vnode)
 
     if (diagramNode == null || diagramNode.nodeName !== Diagram)
@@ -29,7 +29,11 @@ export function render(vnode, co = false) {
         ...diagramNode.attributes,
         co: co !== !!diagramNode.attributes.co,
         children: diagramNode.children
-    }).render()
+    })
+}
+
+export function render(vnode, co = false) {
+    return renderToDiagram(vnode, co).render()
 }
 
 export function corender(vnode) {

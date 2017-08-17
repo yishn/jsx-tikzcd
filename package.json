@@ -1,6 +1,6 @@
 {
   "name": "jsx-tikzcd",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Render tikzcd diagrams with JSX.",
   "main": "./dist/jsx-tikzcd",
   "module": "./src/index",
