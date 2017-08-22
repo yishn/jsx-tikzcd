@@ -197,16 +197,21 @@ function renderEdge(vnode) {
     if (vnode.attributes.direction == null) return '';
 
     var p = !co === !!vnode.attributes.alt ? "'" : '';
+    var needWrapChars = ['"', ',', ']'];
 
-    var _ref5 = vnode.attributes.value && vnode.attributes.value.includes(',') ? ['{', '}'] : ['', ''],
+    var _ref5 = vnode.attributes.value != null && needWrapChars.some(function (c) {
+        return vnode.attributes.value.includes(c);
+    }) ? ['{', '}'] : ['', ''],
         _ref6 = slicedToArray(_ref5, 2),
-        e1 = _ref6[0],
-        e2 = _ref6[1];
+        w1 = _ref6[0],
+        w2 = _ref6[1];
 
-    var value = vnode.attributes.value != null ? ', "' + e1 + vnode.attributes.value + e2 + '"' + p : '';
-    var args = [''].concat(toConsumableArray(vnode.attributes.args || [])).join(', ');
+    var valueArg = vnode.attributes.value != null ? '"' + w1 + vnode.attributes.value + w2 + '"' + p : null;
+    var args = ['', valueArg].concat(toConsumableArray(vnode.attributes.args || [])).filter(function (x) {
+        return x != null;
+    }).join(', ');
 
-    return '\\arrow[' + vnode.attributes.direction + value + args + ']';
+    return '\\arrow[' + vnode.attributes.direction + args + ']';
 }
 
 var Node = function Node() {};

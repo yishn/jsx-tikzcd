@@ -102,16 +102,17 @@ test('duality', t => {
     ].join('\n'))
 })
 
-test('comma in arrow labels', t => {
+test('special characters in arrow labels', t => {
     t.is(render(
         <Diagram>
             <Node key="a" value="A" position={[0, 1]} />
             <Node key="b" value="B" position={[0, 2]} />
             <Edge from="a" to="b" value="(f,g)" />
+            <Edge from="a" to="b" value="g[x]" alt />
         </Diagram>
     ), [
         '\\begin{tikzcd}',
-        'A \\arrow[d, "{(f,g)}"] \\\\',
+        'A \\arrow[d, "{(f,g)}"] \\arrow[d, "{g[x]}"\'] \\\\',
         'B',
         '\\end{tikzcd}'
     ].join('\n'))

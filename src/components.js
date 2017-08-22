@@ -10,11 +10,14 @@ function renderEdge(vnode, co = false) {
     if (vnode.attributes.direction == null) return ''
 
     let p = !co === !!vnode.attributes.alt ? "'" : ''
-    let [e1, e2] = vnode.attributes.value && vnode.attributes.value.includes(',') ? ['{', '}'] : ['', '']
-    let value = vnode.attributes.value != null ? `, "${e1}${vnode.attributes.value}${e2}"${p}` : ''
-    let args = ['', ...(vnode.attributes.args || [])].join(', ')
+    let needWrapChars = ['"', ',', ']']
+    let [w1, w2] = vnode.attributes.value != null
+        && needWrapChars.some(c => vnode.attributes.value.includes(c))
+        ? ['{', '}'] : ['', '']
+    let valueArg = vnode.attributes.value != null ? `"${w1}${vnode.attributes.value}${w2}"${p}` : null
+    let args = ['', valueArg, ...(vnode.attributes.args || [])].filter(x => x != null).join(', ')
 
-    return `\\arrow[${vnode.attributes.direction}${value}${args}]`
+    return `\\arrow[${vnode.attributes.direction}${args}]`
 }
 
 export const Node = () => {}
