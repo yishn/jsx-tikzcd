@@ -197,7 +197,13 @@ function renderEdge(vnode) {
     if (vnode.attributes.direction == null) return '';
 
     var p = !co === !!vnode.attributes.alt ? "'" : '';
-    var value = vnode.attributes.value != null ? ', "' + vnode.attributes.value + '"' + p : '';
+
+    var _ref5 = vnode.attributes.value && vnode.attributes.value.includes(',') ? ['{', '}'] : ['', ''],
+        _ref6 = slicedToArray(_ref5, 2),
+        e1 = _ref6[0],
+        e2 = _ref6[1];
+
+    var value = vnode.attributes.value != null ? ', "' + e1 + vnode.attributes.value + e2 + '"' + p : '';
     var args = [''].concat(toConsumableArray(vnode.attributes.args || [])).join(', ');
 
     return '\\arrow[' + vnode.attributes.direction + value + args + ']';
@@ -257,10 +263,10 @@ var Diagram = function (_Component) {
         _this.edges = children.reduce(function (acc, v) {
             if (v.nodeName !== Edge || !v.attributes.from || !v.attributes.to) return acc;
 
-            var _ref5 = !props.co ? ['from', 'to'] : ['to', 'from'],
-                _ref6 = slicedToArray(_ref5, 2),
-                from = _ref6[0],
-                to = _ref6[1];
+            var _ref7 = !props.co ? ['from', 'to'] : ['to', 'from'],
+                _ref8 = slicedToArray(_ref7, 2),
+                from = _ref8[0],
+                to = _ref8[1];
 
             if (!(v.attributes[from] in acc)) acc[v.attributes[from]] = [];
 
@@ -282,16 +288,16 @@ var Diagram = function (_Component) {
 
             return Object.keys(this.nodes).map(function (key) {
                 return _this2.nodes[key].attributes.position;
-            }).reduce(function (_ref7, _ref8) {
-                var _ref10 = slicedToArray(_ref7, 4),
-                    minX = _ref10[0],
-                    maxX = _ref10[1],
-                    minY = _ref10[2],
-                    maxY = _ref10[3];
+            }).reduce(function (_ref9, _ref10) {
+                var _ref12 = slicedToArray(_ref9, 4),
+                    minX = _ref12[0],
+                    maxX = _ref12[1],
+                    minY = _ref12[2],
+                    maxY = _ref12[3];
 
-                var _ref9 = slicedToArray(_ref8, 2),
-                    x = _ref9[0],
-                    y = _ref9[1];
+                var _ref11 = slicedToArray(_ref10, 2),
+                    x = _ref11[0],
+                    y = _ref11[1];
 
                 return [Math.min(minX, x), Math.max(maxX, x), Math.min(minY, y), Math.max(maxY, y)];
             }, [Infinity, -Infinity, Infinity, -Infinity]);

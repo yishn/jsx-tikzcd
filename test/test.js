@@ -101,3 +101,18 @@ test('duality', t => {
         '\\end{tikzcd}'
     ].join('\n'))
 })
+
+test('comma in arrow labels', t => {
+    t.is(render(
+        <Diagram>
+            <Node key="a" value="A" position={[0, 1]} />
+            <Node key="b" value="B" position={[0, 2]} />
+            <Edge from="a" to="b" value="(f,g)" />
+        </Diagram>
+    ), [
+        '\\begin{tikzcd}',
+        'A \\arrow[d, "{(f,g)}"] \\\\',
+        'B',
+        '\\end{tikzcd}'
+    ].join('\n'))
+})

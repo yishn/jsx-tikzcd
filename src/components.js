@@ -10,7 +10,8 @@ function renderEdge(vnode, co = false) {
     if (vnode.attributes.direction == null) return ''
 
     let p = !co === !!vnode.attributes.alt ? "'" : ''
-    let value = vnode.attributes.value != null ? `, "${vnode.attributes.value}"${p}` : ''
+    let [e1, e2] = vnode.attributes.value && vnode.attributes.value.includes(',') ? ['{', '}'] : ['', '']
+    let value = vnode.attributes.value != null ? `, "${e1}${vnode.attributes.value}${e2}"${p}` : ''
     let args = ['', ...(vnode.attributes.args || [])].join(', ')
 
     return `\\arrow[${vnode.attributes.direction}${value}${args}]`
