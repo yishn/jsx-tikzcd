@@ -196,8 +196,12 @@ function renderEdge(vnode) {
 
     if (vnode.attributes.direction == null) return '';
 
-    var p = !co === !!vnode.attributes.alt ? "'" : '';
     var needWrapChars = ['"', ',', ']'];
+    var labelPosition = vnode.attributes.labelPosition || 'left';
+
+    if (co === !vnode.attributes.alt && labelPosition !== 'inside') labelPosition = labelPosition === 'left' ? 'right' : 'left';
+
+    var p = { left: '', right: "'", inside: ' description' }[labelPosition];
 
     var _ref5 = vnode.attributes.value != null && needWrapChars.some(function (c) {
         return vnode.attributes.value.includes(c);

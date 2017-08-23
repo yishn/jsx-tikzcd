@@ -9,8 +9,13 @@ function getDirection([x1, y1], [x2, y2]) {
 function renderEdge(vnode, co = false) {
     if (vnode.attributes.direction == null) return ''
 
-    let p = !co === !!vnode.attributes.alt ? "'" : ''
     let needWrapChars = ['"', ',', ']']
+    let labelPosition = vnode.attributes.labelPosition || 'left'
+
+    if (co === !vnode.attributes.alt && labelPosition !== 'inside')
+        labelPosition = labelPosition === 'left' ? 'right' : 'left'
+
+    let p = ({left: '', right: "'", inside: ' description'})[labelPosition]
     let [w1, w2] = vnode.attributes.value != null
         && needWrapChars.some(c => vnode.attributes.value.includes(c))
         ? ['{', '}'] : ['', '']

@@ -257,5 +257,6 @@ These attributes only work in the root node, i.e. the node that's passed to `ren
 * `from` `<String>` - Key of the start node
 * `to` `<String>` - Key of the end node
 * `value` `<String>` *(optional)* - LaTeX label
+* `labelPosition` `<String>` *(optional)* - One of `"left"`, `"right"`, and `"inside"`
 * `alt` `<Boolean>` *(optional)* - Determines whether the label is positioned on the other side of the arrow
 * `args` `<String[]>` *(optional)* - Additional tikzcd arguments of edge, e.g. `"hook"`, `"two heads"`, etc.
