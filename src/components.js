@@ -129,7 +129,7 @@ export class Diagram extends Component {
             this.toArray().map(entries => entries.map(entry =>
                 entry == null ? ''
                 : [
-                    entry.node.attributes.value,
+                    entry.node.attributes.value || '{}',
                     ...entry.edges.map(e => renderEdge(e, this.props.co))
                 ].join(' ')
             ).join(' & ')).join(' \\\\\n'),
