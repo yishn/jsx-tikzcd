@@ -370,7 +370,7 @@ var Diagram = function (_Component) {
 
             return ['\\begin{tikzcd}' + options, this.toArray().map(function (entries) {
                 return entries.map(function (entry) {
-                    return entry == null ? '' : [entry.node.attributes.value].concat(toConsumableArray(entry.edges.map(function (e) {
+                    return entry == null ? '' : [entry.node.attributes.value || '{}'].concat(toConsumableArray(entry.edges.map(function (e) {
                         return renderEdge(e, _this3.props.co);
                     }))).join(' ');
                 }).join(' & ');
