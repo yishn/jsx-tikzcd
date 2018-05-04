@@ -375,7 +375,18 @@ var Diagram = function (_Component) {
 
             return ['\\begin{tikzcd}' + options, this.toArray().map(function (entries) {
                 return entries.map(function (entry) {
-                    return entry == null ? '' : [entry.node.props.value || '{}'].concat(toConsumableArray(entry.edges.map(function (e) {
+                    return entry == null ? '' : [function () {
+                        var value = entry.node.props.value;
+
+                        var _ref13 = value != null && needWrapChars.some(function (c) {
+                            return value.includes(c);
+                        }) ? ['{', '}'] : ['', ''],
+                            _ref14 = slicedToArray(_ref13, 2),
+                            w1 = _ref14[0],
+                            w2 = _ref14[1];
+
+                        return value != null ? '' + w1 + value + w2 : '{}';
+                    }()].concat(toConsumableArray(entry.edges.map(function (e) {
                         return renderEdge(e, _this3.props.co);
                     }))).join(' ');
                 }).join(' & ');

@@ -131,7 +131,14 @@ export class Diagram extends Component {
             this.toArray().map(entries => entries.map(entry =>
                 entry == null ? ''
                 : [
-                    entry.node.props.value || '{}',
+                    (() => {
+                        let value = entry.node.props.value;
+                        let [w1, w2] = value != null
+                            && needWrapChars.some(c => value.includes(c))
+                            ? ['{', '}'] : ['', '']
+
+                        return value != null ? `${w1}${value}${w2}` : '{}'
+                    })(),
                     ...entry.edges.map(e => renderEdge(e, this.props.co))
                 ].join(' ')
             ).join(' & ')).join(' \\\\\n'),
