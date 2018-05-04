@@ -235,7 +235,7 @@ Returns a string which contains the corresponding LaTeX code to the given diagra
 
 ### `<Diagram/>`
 
-#### Attributes
+#### Props
 
 * `co` `<Boolean>` *(optional)* - Determines whether to reverse all edges
 * `options` `<String>` *(optional)* - `tikzcd` environment options
@@ -244,7 +244,7 @@ These attributes only work in the root node, i.e. the node that's passed to `ren
 
 ### `<Node/>`
 
-#### Attributes
+#### Props
 
 * `key` `<String>`
 * `position` `<Integer[]>` - Has the form `[x, y]`, negative integers are also allowed
@@ -252,7 +252,7 @@ These attributes only work in the root node, i.e. the node that's passed to `ren
 
 ### `<Edge/>`
 
-#### Attributes
+#### Props
 
 * `from` `<String>` - Key of the start node
 * `to` `<String>` - Key of the end node
