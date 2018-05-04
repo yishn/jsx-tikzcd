@@ -1,4 +1,4 @@
-export default function h(nodeName, attributes, ...children) {
+export default function h(type, props, ...children) {
     let getChildren = children => children.reduce((acc, child) => {
         if (child instanceof Array) {
             acc.push(...getChildren(child))
@@ -10,9 +10,9 @@ export default function h(nodeName, attributes, ...children) {
     }, [])
 
     return {
-        nodeName,
-        attributes: attributes || {},
-        key: attributes && attributes.key,
+        type,
+        props: props || {},
+        key: props && props.key,
         children: getChildren(children)
     }
 }

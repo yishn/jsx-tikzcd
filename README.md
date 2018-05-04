@@ -111,8 +111,8 @@ class Arrow extends Component {
         let [a, b, ] = this.props.children
 
         return <Diagram>
-            <Node {...a.attributes} position={[x, y]} />
-            <Node {...b.attributes} position={[x + dx, y + dy]} />
+            <Node {...a.props} position={[x, y]} />
+            <Node {...b.props} position={[x + dx, y + dy]} />
 
             <Edge from={a.key} to={b.key} />
         </Diagram>
@@ -143,8 +143,8 @@ const Arrow = function(props) {
     let [a, b, ] = props.children
 
     return <Diagram>
-        <Node {...a.attributes} position={[x, y]} />
-        <Node {...b.attributes} position={[x + dx, y + dy]} />
+        <Node {...a.props} position={[x, y]} />
+        <Node {...b.props} position={[x + dx, y + dy]} />
 
         <Edge from={a.key} to={b.key} />
     </Diagram>
@@ -247,7 +247,7 @@ These attributes only work in the root node, i.e. the node that's passed to `ren
 #### Attributes
 
 * `key` `<String>`
-* `position` `<Int[]>` - Has the form `[x, y]`, negative integers are also allowed
+* `position` `<Integer[]>` - Has the form `[x, y]`, negative integers are also allowed
 * `value` `<String>` *(optional)* - LaTeX label
 
 ### `<Edge/>`

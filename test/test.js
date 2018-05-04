@@ -5,15 +5,15 @@ const Square = ({width = 1, height = 1, children, position = [0, 0]}) => {
     let diffs = [[0, 0], [width, 0], [width, height], [0, height]]
 
     let childProps = children
-        .filter(v => v && v.nodeName === Node)
-        .map(v => v.attributes)
+        .filter(v => v && v.type === Node)
+        .map(v => v.props)
 
     return <Diagram>
         {diffs.map((diff, i) =>
             <Node {...childProps[i]} position={position.map((x, j) => x + diff[j])} />
         )}
 
-        {children.filter(v => v && v.nodeName === Edge)}
+        {children.filter(v => v && v.type === Edge)}
     </Diagram>
 }
 
@@ -25,8 +25,8 @@ const Arrow = ({children, position = [0, 0], direction = [1, 0], ...edgeProps}) 
     let [a, b, ] = children
 
     return <Diagram>
-        <Node {...a.attributes} position={[x, y]} />
-        <Node {...b.attributes} position={[x + dx, y + dy]} />
+        <Node {...a.props} position={[x, y]} />
+        <Node {...b.props} position={[x + dx, y + dy]} />
 
         <Edge {...edgeProps} from={a.key} to={b.key} />
     </Diagram>

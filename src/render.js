@@ -3,13 +3,13 @@ import {Diagram, Node, Edge} from './components'
 function resolveComponents(vnode) {
     if (vnode == null) return null
 
-    if (![Diagram, Node, Edge].includes(vnode.nodeName)) {
-        let props = {...vnode.attributes, children: vnode.children}
+    if (![Diagram, Node, Edge].includes(vnode.type)) {
+        let props = {...vnode.props, children: vnode.children}
 
-        if ('render' in vnode.nodeName.prototype) {
-            return resolveComponents(new vnode.nodeName(props).render())
+        if ('render' in vnode.type.prototype) {
+            return resolveComponents(new vnode.type(props).render())
         } else {
-            return resolveComponents(vnode.nodeName(props))
+            return resolveComponents(vnode.type(props))
         }
     }
 
@@ -22,12 +22,12 @@ function resolveComponents(vnode) {
 export function renderToDiagram(vnode, co = false) {
     let diagramNode = resolveComponents(vnode)
 
-    if (diagramNode == null || diagramNode.nodeName !== Diagram)
+    if (diagramNode == null || diagramNode.type !== Diagram)
         return null
 
     return new Diagram({
-        ...diagramNode.attributes,
-        co: co !== !!diagramNode.attributes.co,
+        ...diagramNode.props,
+        co: co !== !!diagramNode.props.co,
         children: diagramNode.children
     })
 }
