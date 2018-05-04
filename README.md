@@ -260,3 +260,7 @@ These attributes only work in the root node, i.e. the node that's passed to `ren
 * `labelPosition` `<String>` *(optional)* - One of `"left"`, `"right"`, and `"inside"`
 * `alt` `<Boolean>` *(optional)* - Determines whether the label is positioned on the other side of the arrow
 * `args` `<String[]>` *(optional)* - Additional tikzcd arguments of edge, e.g. `"hook"`, `"two heads"`, etc.
+
+## Related
+
+* [tikzcd-editor](https://github.com/yishn/tikzcd-editor) - A simple visual editor for creating commutative diagrams.
