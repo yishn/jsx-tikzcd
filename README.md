@@ -111,8 +111,8 @@ class Arrow extends Component {
         let [a, b, ] = this.props.children
 
         return <Diagram>
-            <Node {...a.attributes} position={[x, y]} />
-            <Node {...b.attributes} position={[x + dx, y + dy]} />
+            <Node {...a.props} position={[x, y]} />
+            <Node {...b.props} position={[x + dx, y + dy]} />
 
             <Edge from={a.key} to={b.key} />
         </Diagram>
@@ -143,8 +143,8 @@ const Arrow = function(props) {
     let [a, b, ] = props.children
 
     return <Diagram>
-        <Node {...a.attributes} position={[x, y]} />
-        <Node {...b.attributes} position={[x + dx, y + dy]} />
+        <Node {...a.props} position={[x, y]} />
+        <Node {...b.props} position={[x + dx, y + dy]} />
 
         <Edge from={a.key} to={b.key} />
     </Diagram>
@@ -230,12 +230,14 @@ let tex = corender(
 #### Arguments
 
 * `vnode` [`<Diagram/>`](#diagram) - The diagram to render
+* `options` `<Object>` *(optional)*
+    * `align` `<Boolean>` - Determines whether the generated code will vertically align at `&`. Default: `false`
 
 Returns a string which contains the corresponding LaTeX code to the given diagram.
 
 ### `<Diagram/>`
 
-#### Attributes
+#### Props
 
 * `co` `<Boolean>` *(optional)* - Determines whether to reverse all edges
 * `options` `<String>` *(optional)* - `tikzcd` environment options
@@ -244,15 +246,15 @@ These attributes only work in the root node, i.e. the node that's passed to `ren
 
 ### `<Node/>`
 
-#### Attributes
+#### Props
 
 * `key` `<String>`
-* `position` `<Int[]>` - Has the form `[x, y]`, negative integers are also allowed
+* `position` `<Integer[]>` - Has the form `[x, y]`, negative integers are also allowed
 * `value` `<String>` *(optional)* - LaTeX label
 
 ### `<Edge/>`
 
-#### Attributes
+#### Props
 
 * `from` `<String>` - Key of the start node
 * `to` `<String>` - Key of the end node
@@ -260,3 +262,7 @@ These attributes only work in the root node, i.e. the node that's passed to `ren
 * `labelPosition` `<String>` *(optional)* - One of `"left"`, `"right"`, and `"inside"`
 * `alt` `<Boolean>` *(optional)* - Determines whether the label is positioned on the other side of the arrow
 * `args` `<String[]>` *(optional)* - Additional tikzcd arguments of edge, e.g. `"hook"`, `"two heads"`, etc.
+
+## Related
+
+* [tikzcd-editor](https://github.com/yishn/tikzcd-editor) - A simple visual editor for creating commutative diagrams.

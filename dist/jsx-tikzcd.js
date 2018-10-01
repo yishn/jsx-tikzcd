@@ -146,7 +146,7 @@ var toConsumableArray = function (arr) {
   }
 };
 
-function h(nodeName, attributes) {
+function h(type, props) {
     for (var _len = arguments.length, children = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
         children[_key - 2] = arguments[_key];
     }
@@ -164,12 +164,14 @@ function h(nodeName, attributes) {
     };
 
     return {
-        nodeName: nodeName,
-        attributes: attributes || {},
-        key: attributes && attributes.key,
+        type: type,
+        props: props || {},
+        key: props && props.key,
         children: getChildren(children)
     };
 }
+
+var needWrapChars = ['"', ',', ']'];
 
 function getDirection(_ref, _ref2) {
     var _ref4 = slicedToArray(_ref, 2),
@@ -193,29 +195,32 @@ function getDirection(_ref, _ref2) {
 
 function renderEdge(vnode) {
     var co = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    var _vnode$props = vnode.props,
+        direction = _vnode$props.direction,
+        alt = _vnode$props.alt,
+        value = _vnode$props.value;
 
-    if (vnode.attributes.direction == null) return '';
+    if (direction == null) return '';
 
-    var needWrapChars = ['"', ',', ']'];
-    var labelPosition = vnode.attributes.labelPosition || 'left';
+    var labelPosition = vnode.props.labelPosition || 'left';
 
-    if (co === !vnode.attributes.alt && labelPosition !== 'inside') labelPosition = labelPosition === 'left' ? 'right' : 'left';
+    if (co === !alt && labelPosition !== 'inside') labelPosition = labelPosition === 'left' ? 'right' : 'left';
 
     var p = { left: '', right: "'", inside: ' description' }[labelPosition];
 
-    var _ref5 = vnode.attributes.value != null && needWrapChars.some(function (c) {
-        return vnode.attributes.value.includes(c);
+    var _ref5 = value != null && needWrapChars.some(function (c) {
+        return value.includes(c);
     }) ? ['{', '}'] : ['', ''],
         _ref6 = slicedToArray(_ref5, 2),
         w1 = _ref6[0],
         w2 = _ref6[1];
 
-    var valueArg = vnode.attributes.value != null ? '"' + w1 + vnode.attributes.value + w2 + '"' + p : null;
-    var args = ['', valueArg].concat(toConsumableArray(vnode.attributes.args || [])).filter(function (x) {
+    var valueArg = value != null ? '"' + w1 + value + w2 + '"' + p : null;
+    var args = ['', valueArg].concat(toConsumableArray(vnode.props.args || [])).filter(function (x) {
         return x != null;
     }).join(', ');
 
-    return '\\arrow[' + vnode.attributes.direction + args + ']';
+    return '\\arrow[' + direction + args + ']';
 }
 
 var Node = function Node() {};
@@ -247,7 +252,7 @@ var Diagram = function (_Component) {
             return vnode.children.reduce(function (acc, v) {
                 if (v == null) return acc;
 
-                if ([Node, Edge].includes(v.nodeName)) {
+                if ([Node, Edge].includes(v.type)) {
                     acc.push(v);
                 } else {
                     acc.push.apply(acc, toConsumableArray(getChildren(v)));
@@ -260,28 +265,28 @@ var Diagram = function (_Component) {
         var children = getChildren(_this.props);
 
         _this.nodes = children.reduce(function (acc, v) {
-            if (v.nodeName !== Node || !v.key || !v.attributes.position) return acc;
+            if (v.type !== Node || !v.key || !v.props.position) return acc;
 
             if (!(v.key in acc)) acc[v.key] = v;else acc[v.key] = _extends({}, acc[v.key], {
-                attributes: _extends({}, acc[v.key].attributes, v.attributes)
+                props: _extends({}, acc[v.key].props, v.props)
             });
 
             return acc;
         }, {});
 
         _this.edges = children.reduce(function (acc, v) {
-            if (v.nodeName !== Edge || !v.attributes.from || !v.attributes.to) return acc;
+            if (v.type !== Edge || !v.props.from || !v.props.to) return acc;
 
             var _ref7 = !props.co ? ['from', 'to'] : ['to', 'from'],
                 _ref8 = slicedToArray(_ref7, 2),
                 from = _ref8[0],
                 to = _ref8[1];
 
-            if (!(v.attributes[from] in acc)) acc[v.attributes[from]] = [];
+            if (!(v.props[from] in acc)) acc[v.props[from]] = [];
 
-            acc[v.attributes[from]].push(_extends({}, v, {
-                attributes: _extends({}, v.attributes, {
-                    direction: getDirection(_this.nodes[v.attributes[from]].attributes.position, _this.nodes[v.attributes[to]].attributes.position)
+            acc[v.props[from]].push(_extends({}, v, {
+                props: _extends({}, v.props, {
+                    direction: getDirection(_this.nodes[v.props[from]].props.position, _this.nodes[v.props[to]].props.position)
                 })
             }));
 
@@ -296,7 +301,7 @@ var Diagram = function (_Component) {
             var _this2 = this;
 
             return Object.keys(this.nodes).map(function (key) {
-                return _this2.nodes[key].attributes.position;
+                return _this2.nodes[key].props.position;
             }).reduce(function (_ref9, _ref10) {
                 var _ref12 = slicedToArray(_ref9, 4),
                     minX = _ref12[0],
@@ -335,9 +340,9 @@ var Diagram = function (_Component) {
                 for (var _iterator = Object.keys(this.nodes)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                     var key = _step.value;
 
-                    var _nodes$key$attributes = slicedToArray(this.nodes[key].attributes.position, 2),
-                        x = _nodes$key$attributes[0],
-                        y = _nodes$key$attributes[1];
+                    var _nodes$key$props$posi = slicedToArray(this.nodes[key].props.position, 2),
+                        x = _nodes$key$props$posi[0],
+                        y = _nodes$key$props$posi[1];
 
                     diagram[y - minY][x - minX] = {
                         node: this.nodes[key],
@@ -370,7 +375,18 @@ var Diagram = function (_Component) {
 
             return ['\\begin{tikzcd}' + options, this.toArray().map(function (entries) {
                 return entries.map(function (entry) {
-                    return entry == null ? '' : [entry.node.attributes.value || '{}'].concat(toConsumableArray(entry.edges.map(function (e) {
+                    return entry == null ? '' : [function () {
+                        var value = entry.node.props.value;
+
+                        var _ref13 = value != null && needWrapChars.some(function (c) {
+                            return value.includes(c);
+                        }) ? ['{', '}'] : ['', ''],
+                            _ref14 = slicedToArray(_ref13, 2),
+                            w1 = _ref14[0],
+                            w2 = _ref14[1];
+
+                        return value != null ? '' + w1 + value + w2 : '{}';
+                    }()].concat(toConsumableArray(entry.edges.map(function (e) {
                         return renderEdge(e, _this3.props.co);
                     }))).join(' ');
                 }).join(' & ');
@@ -383,13 +399,13 @@ var Diagram = function (_Component) {
 function resolveComponents(vnode) {
     if (vnode == null) return null;
 
-    if (![Diagram, Node, Edge].includes(vnode.nodeName)) {
-        var props = _extends({}, vnode.attributes, { children: vnode.children });
+    if (![Diagram, Node, Edge].includes(vnode.type)) {
+        var props = _extends({}, vnode.props, { children: vnode.children });
 
-        if ('render' in vnode.nodeName.prototype) {
-            return resolveComponents(new vnode.nodeName(props).render());
+        if ('render' in vnode.type.prototype) {
+            return resolveComponents(new vnode.type(props).render());
         } else {
-            return resolveComponents(vnode.nodeName(props));
+            return resolveComponents(vnode.type(props));
         }
     }
 
@@ -405,10 +421,10 @@ function renderToDiagram(vnode) {
 
     var diagramNode = resolveComponents(vnode);
 
-    if (diagramNode == null || diagramNode.nodeName !== Diagram) return null;
+    if (diagramNode == null || diagramNode.type !== Diagram) return null;
 
-    return new Diagram(_extends({}, diagramNode.attributes, {
-        co: co !== !!diagramNode.attributes.co,
+    return new Diagram(_extends({}, diagramNode.props, {
+        co: co !== !!diagramNode.props.co,
         children: diagramNode.children
     }));
 }

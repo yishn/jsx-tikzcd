@@ -1,3 +1,5 @@
+const needWrapChars = ['"', ',', ']']
+
 function getDirection([x1, y1], [x2, y2]) {
     let [dx, dy] = [x2 - x1, y2 - y1]
     let signs = [dx, dy].map(Math.sign)
@@ -7,22 +9,22 @@ function getDirection([x1, y1], [x2, y2]) {
 }
 
 function renderEdge(vnode, co = false) {
-    if (vnode.attributes.direction == null) return ''
+    let {direction, alt, value} = vnode.props;
+    if (direction == null) return ''
 
-    let needWrapChars = ['"', ',', ']']
-    let labelPosition = vnode.attributes.labelPosition || 'left'
+    let labelPosition = vnode.props.labelPosition || 'left'
 
-    if (co === !vnode.attributes.alt && labelPosition !== 'inside')
+    if (co === !alt && labelPosition !== 'inside')
         labelPosition = labelPosition === 'left' ? 'right' : 'left'
 
     let p = ({left: '', right: "'", inside: ' description'})[labelPosition]
-    let [w1, w2] = vnode.attributes.value != null
-        && needWrapChars.some(c => vnode.attributes.value.includes(c))
+    let [w1, w2] = value != null
+        && needWrapChars.some(c => value.includes(c))
         ? ['{', '}'] : ['', '']
-    let valueArg = vnode.attributes.value != null ? `"${w1}${vnode.attributes.value}${w2}"${p}` : null
-    let args = ['', valueArg, ...(vnode.attributes.args || [])].filter(x => x != null).join(', ')
+    let valueArg = value != null ? `"${w1}${value}${w2}"${p}` : null
+    let args = ['', valueArg, ...(vnode.props.args || [])].filter(x => x != null).join(', ')
 
-    return `\\arrow[${vnode.attributes.direction}${args}]`
+    return `\\arrow[${direction}${args}]`
 }
 
 export const Node = () => {}
@@ -43,7 +45,7 @@ export class Diagram extends Component {
         let getChildren = vnode => vnode.children.reduce((acc, v) => {
             if (v == null) return acc
 
-            if ([Node, Edge].includes(v.nodeName)) {
+            if ([Node, Edge].includes(v.type)) {
                 acc.push(v)
             } else {
                 acc.push(...getChildren(v))
@@ -55,15 +57,15 @@ export class Diagram extends Component {
         let children = getChildren(this.props)
 
         this.nodes = children.reduce((acc, v) => {
-            if (v.nodeName !== Node || !v.key || !v.attributes.position)
+            if (v.type !== Node || !v.key || !v.props.position)
                 return acc
 
             if (!(v.key in acc)) acc[v.key] = v
             else acc[v.key] = {
                 ...acc[v.key],
-                attributes: {
-                    ...acc[v.key].attributes,
-                    ...v.attributes
+                props: {
+                    ...acc[v.key].props,
+                    ...v.props
                 }
             }
 
@@ -71,20 +73,20 @@ export class Diagram extends Component {
         }, {})
 
         this.edges = children.reduce((acc, v) => {
-            if (v.nodeName !== Edge || !v.attributes.from || !v.attributes.to)
+            if (v.type !== Edge || !v.props.from || !v.props.to)
                 return acc
 
             let [from, to] = !props.co ? ['from', 'to'] : ['to', 'from']
 
-            if (!(v.attributes[from] in acc)) acc[v.attributes[from]] = []
+            if (!(v.props[from] in acc)) acc[v.props[from]] = []
 
-            acc[v.attributes[from]].push({
+            acc[v.props[from]].push({
                 ...v,
-                attributes: {
-                    ...v.attributes,
+                props: {
+                    ...v.props,
                     direction: getDirection(
-                        this.nodes[v.attributes[from]].attributes.position,
-                        this.nodes[v.attributes[to]].attributes.position
+                        this.nodes[v.props[from]].props.position,
+                        this.nodes[v.props[to]].props.position
                     )
                 }
             })
@@ -95,7 +97,7 @@ export class Diagram extends Component {
 
     getBounds() {
         return Object.keys(this.nodes)
-            .map(key => this.nodes[key].attributes.position)
+            .map(key => this.nodes[key].props.position)
             .reduce(([minX, maxX, minY, maxY], [x, y]) => [
                 Math.min(minX, x), Math.max(maxX, x),
                 Math.min(minY, y), Math.max(maxY, y)
@@ -109,7 +111,7 @@ export class Diagram extends Component {
         let diagram = Array(maxY - minY + 1).fill().map(_ => Array(maxX - minX + 1).fill(null))
 
         for (let key of Object.keys(this.nodes)) {
-            let [x, y] = this.nodes[key].attributes.position
+            let [x, y] = this.nodes[key].props.position
 
             diagram[y - minY][x - minX] = {
                 node: this.nodes[key],
@@ -123,16 +125,34 @@ export class Diagram extends Component {
     render() {
         let options = this.props.options == null ? '' : `[${this.props.options}]`
 
+        let cells = this.toArray().map(entries => entries.map(entry =>
+            entry == null ? ''
+            : [
+                (() => {
+                    let value = entry.node.props.value
+                    let [w1, w2] = value != null
+                        && needWrapChars.some(c => value.includes(c))
+                        ? ['{', '}'] : ['', '']
+
+                    return value != null ? `${w1}${value}${w2}` : '{}'
+                })(),
+                ...entry.edges.map(e => renderEdge(e, this.props.co))
+            ].join(' ')
+        ))
+
+        if (this.props.align && cells.length > 0) {
+            for (let j = 0; j < cells[0].length; j++) {
+                let maxLength = Math.max(...cells.map(entries => entries[j].length))
+                for (let i = 0; i < cells.length; i++) {
+                    cells[i][j] = cells[i][j].padEnd(maxLength, ' ')
+                }
+            }
+        }
+
         return [
             `\\begin{tikzcd}${options}`,
 
-            this.toArray().map(entries => entries.map(entry =>
-                entry == null ? ''
-                : [
-                    entry.node.attributes.value || '{}',
-                    ...entry.edges.map(e => renderEdge(e, this.props.co))
-                ].join(' ')
-            ).join(' & ')).join(' \\\\\n'),
+            cells.map(entries => entries.join(' & ')).join(' \\\\\n'),
 
             '\\end{tikzcd}'
         ].join('\n')
