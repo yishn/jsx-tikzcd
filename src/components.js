@@ -125,23 +125,34 @@ export class Diagram extends Component {
     render() {
         let options = this.props.options == null ? '' : `[${this.props.options}]`
 
+        let cells = this.toArray().map(entries => entries.map(entry =>
+            entry == null ? ''
+            : [
+                (() => {
+                    let value = entry.node.props.value
+                    let [w1, w2] = value != null
+                        && needWrapChars.some(c => value.includes(c))
+                        ? ['{', '}'] : ['', '']
+
+                    return value != null ? `${w1}${value}${w2}` : '{}'
+                })(),
+                ...entry.edges.map(e => renderEdge(e, this.props.co))
+            ].join(' ')
+        ))
+
+        if (this.props.align && cells.length > 0) {
+            for (let j = 0; j < cells[0].length; j++) {
+                let maxLength = Math.max(...cells.map(entries => entries[j].length))
+                for (let i = 0; i < cells.length; i++) {
+                    cells[i][j] = cells[i][j].padEnd(maxLength, ' ')
+                }
+            }
+        }
+
         return [
             `\\begin{tikzcd}${options}`,
 
-            this.toArray().map(entries => entries.map(entry =>
-                entry == null ? ''
-                : [
-                    (() => {
-                        let value = entry.node.props.value;
-                        let [w1, w2] = value != null
-                            && needWrapChars.some(c => value.includes(c))
-                            ? ['{', '}'] : ['', '']
-
-                        return value != null ? `${w1}${value}${w2}` : '{}'
-                    })(),
-                    ...entry.edges.map(e => renderEdge(e, this.props.co))
-                ].join(' ')
-            ).join(' & ')).join(' \\\\\n'),
+            cells.map(entries => entries.join(' & ')).join(' \\\\\n'),
 
             '\\end{tikzcd}'
         ].join('\n')
