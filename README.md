@@ -230,6 +230,8 @@ let tex = corender(
 #### Arguments
 
 * `vnode` [`<Diagram/>`](#diagram) - The diagram to render
+* `options` `<Object>` *(optional)*
+    * `align` `<Boolean>` - Determines whether the generated code will vertically align at `&`. Default: `false`
 
 Returns a string which contains the corresponding LaTeX code to the given diagram.
 
