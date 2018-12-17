@@ -22,7 +22,7 @@ function renderEdge(vnode, co = false) {
         && needWrapChars.some(c => value.includes(c))
         ? ['{', '}'] : ['', '']
     let valueArg = value != null ? `"${w1}${value}${w2}"${p}` : null
-    let args = ['', valueArg, ...(vnode.props.args || [])].filter(x => x != null).join(', ')
+    let args = [direction ? '' : null, valueArg, ...(vnode.props.args || [])].filter(x => x != null).join(', ')
 
     return `\\arrow[${direction}${args}]`
 }
