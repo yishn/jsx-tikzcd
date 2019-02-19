@@ -134,11 +134,15 @@ export class Diagram extends Component {
                         && needWrapChars.some(c => value.includes(c))
                         ? ['{', '}'] : ['', '']
 
-                    return value != null ? `${w1}${value}${w2}` : '{}'
+                    return value != null ? `${w1}${value}${w2}` : ''
                 })(),
                 ...entry.edges.map(e => renderEdge(e, this.props.co))
             ].join(' ')
         ))
+        
+        if ([].concat(...cells).every(x => x === '')) {
+            cells = cells.map(row => row.map(_ => '{}'))
+        }
 
         if (this.props.align && cells.length > 0) {
             for (let j = 0; j < cells[0].length; j++) {
