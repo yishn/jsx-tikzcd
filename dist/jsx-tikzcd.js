@@ -216,7 +216,7 @@ function renderEdge(vnode) {
         w2 = _ref6[1];
 
     var valueArg = value != null ? '"' + w1 + value + w2 + '"' + p : null;
-    var args = ['', valueArg].concat(toConsumableArray(vnode.props.args || [])).filter(function (x) {
+    var args = [direction ? '' : null, valueArg].concat(toConsumableArray(vnode.props.args || [])).filter(function (x) {
         return x != null;
     }).join(', ');
 
@@ -369,11 +369,12 @@ var Diagram = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            var _this3 = this;
+            var _this3 = this,
+                _ref15;
 
             var options = this.props.options == null ? '' : '[' + this.props.options + ']';
 
-            return ['\\begin{tikzcd}' + options, this.toArray().map(function (entries) {
+            var cells = this.toArray().map(function (entries) {
                 return entries.map(function (entry) {
                     return entry == null ? '' : [function () {
                         var value = entry.node.props.value;
@@ -385,11 +386,40 @@ var Diagram = function (_Component) {
                             w1 = _ref14[0],
                             w2 = _ref14[1];
 
-                        return value != null ? '' + w1 + value + w2 : '{}';
+                        return value != null ? '' + w1 + value + w2 : '';
                     }()].concat(toConsumableArray(entry.edges.map(function (e) {
                         return renderEdge(e, _this3.props.co);
                     }))).join(' ');
-                }).join(' & ');
+                });
+            });
+
+            if ((_ref15 = []).concat.apply(_ref15, toConsumableArray(cells)).every(function (x) {
+                return x === '';
+            })) {
+                cells = cells.map(function (row) {
+                    return row.map(function (_) {
+                        return '{}';
+                    });
+                });
+            }
+
+            if (this.props.align && cells.length > 0) {
+                var _loop = function _loop(j) {
+                    var maxLength = Math.max.apply(Math, toConsumableArray(cells.map(function (entries) {
+                        return entries[j].length;
+                    })));
+                    for (var i = 0; i < cells.length; i++) {
+                        cells[i][j] = cells[i][j].padEnd(maxLength, ' ');
+                    }
+                };
+
+                for (var j = 0; j < cells[0].length; j++) {
+                    _loop(j);
+                }
+            }
+
+            return ['\\begin{tikzcd}' + options, cells.map(function (entries) {
+                return entries.join(' & ');
             }).join(' \\\\\n'), '\\end{tikzcd}'].join('\n');
         }
     }]);
@@ -417,7 +447,8 @@ function resolveComponents(vnode) {
 }
 
 function renderToDiagram(vnode) {
-    var co = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var co = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
     var diagramNode = resolveComponents(vnode);
 
@@ -425,18 +456,22 @@ function renderToDiagram(vnode) {
 
     return new Diagram(_extends({}, diagramNode.props, {
         co: co !== !!diagramNode.props.co,
+        align: options.align ? options.align : false,
         children: diagramNode.children
     }));
 }
 
 function render(vnode) {
-    var co = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var co = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
-    return renderToDiagram(vnode, co).render();
+    return renderToDiagram(vnode, options, co).render();
 }
 
 function corender(vnode) {
-    return render(vnode, true);
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    return render(vnode, options, true);
 }
 
 exports.h = h;
