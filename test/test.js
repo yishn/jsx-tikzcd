@@ -132,6 +132,20 @@ test('special characters in node values', t => {
         '{(B,C)}',
         '\\end{tikzcd}'
     ].join('\n'))
+
+    t.is(render(
+        <Diagram>
+            <Node key="a" value="" position={[0, 0]} />
+            <Node key="b"  position={[0, 2]} />
+            <Edge from="a" to="b" value="\xi" alt />
+        </Diagram>
+    ), [
+        '\\begin{tikzcd}',
+        '{} \\arrow[dd, "\\xi"\'] \\\\',
+        ' \\\\',
+        '{}',
+        '\\end{tikzcd}'
+    ].join('\n'))
 })
 
 test('inside arrow label position', t => {
