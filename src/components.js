@@ -129,17 +129,17 @@ export class Diagram extends Component {
             entry == null ? ''
             : [
                 (() => {
-                    let value = entry.node.props.value
-                    let [w1, w2] = value != null
-                        && needWrapChars.some(c => value.includes(c))
+                    let value = entry.node.props.value || ''
+                    let [w1, w2] = value.trim() === ''
+                        || needWrapChars.some(c => value.includes(c))
                         ? ['{', '}'] : ['', '']
 
-                    return value != null ? `${w1}${value}${w2}` : ''
+                    return `${w1}${value}${w2}`
                 })(),
                 ...entry.edges.map(e => renderEdge(e, this.props.co))
             ].join(' ')
         ))
-        
+
         if ([].concat(...cells).every(x => x === '')) {
             cells = cells.map(row => row.map(_ => '{}'))
         }
