@@ -136,7 +136,7 @@ test('special characters in node values', t => {
     t.is(render(
         <Diagram>
             <Node key="a" value="" position={[0, 0]} />
-            <Node key="b"  position={[0, 2]} />
+            <Node key="b" position={[0, 2]} />
             <Edge from="a" to="b" value="\xi" alt />
         </Diagram>
     ), [
